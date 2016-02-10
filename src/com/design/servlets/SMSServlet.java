@@ -26,8 +26,6 @@ public class SMSServlet extends HttpServlet {
     	if (request.getParameter("From") != null) {
     		System.out.println(request.getParameter("From"));
             System.out.println(request.getParameter("Body"));
-            System.out.println("WOOHOO-SQL");
-            System.out.println("SUPER KEWL");
     	}
     }
 }
