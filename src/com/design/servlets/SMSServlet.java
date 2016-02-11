@@ -203,17 +203,18 @@ public class SMSServlet extends HttpServlet {
     	WeatherStatusResponse currentWeather = null;
     	
     	WeatherForecastResponse forecast = null;
+    
 		try {
 			if (text.contains(",")) {
-				text = text.replace(" ", "");
 				String [] textArr = text.split(",");
 				textArr[0] = textArr[0].trim();
-				textArr[0].replace(" ", "%20");
+				textArr[1] = textArr[1].trim();
+				textArr[0] = textArr[0].replace(" ", "");
 				System.out.println("Input:" + textArr[0]);
 				currentWeather = owm.currentWeatherAtCity(textArr[0], textArr[1]);
 			} else {
 				text = text.trim();
-				text.replace(" ", "%20");
+				text = text.replace(" ", "");
 				System.out.println("Input:" + text);
 				currentWeather = owm.currentWeatherAtCity(text);
 			}
