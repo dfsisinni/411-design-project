@@ -32,7 +32,7 @@ public interface Weather {
     }
     
     public static void latLonWeatherSearch (String text) {
-    	String output = "";
+    	String output = ".\n";
     	text = text.replace(" ", "+");
 		String [] loc = Maps.getLatLong(text);
 		
@@ -90,7 +90,7 @@ public interface Weather {
     
     public static void normalWeatherSearch (String orig) {
     	String text = orig;
-    	String output = "";
+    	String output = ".\n";
     	OwmClient owm = new OwmClient ();
     	WeatherStatusResponse currentWeather = null;
     	

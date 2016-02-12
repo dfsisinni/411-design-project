@@ -12,7 +12,7 @@ import com.wolfram.alpha.WASubpod;
 public interface Wolfram {
 
 	public static void wolframAlpha(String body) {
-    	String result = "";
+    	String result = ".\n";
     	
     	 WAEngine engine = new WAEngine();
     	 engine.setAppID("7AHUTR-UV58KYXA8Q");
@@ -31,8 +31,13 @@ public interface Wolfram {
     	 if (queryResult.isError()) {
     		 
     	 } else {
+    		 outerloop:
+    		 
     		 for (WAPod pod : queryResult.getPods()) {
     			 if (!pod.isError()) {
+    				 
+    				
+    				 
     				 for (WASubpod subpod : pod.getSubpods()) {
     					 for (Object element : subpod.getContents()) {
     						 if (element instanceof WAPlainText) {
@@ -40,11 +45,20 @@ public interface Wolfram {
     							 if (body.toLowerCase().contains("derivative") || body.toLowerCase().contains("deriv")) {
     								 if (((WAPlainText) element).getText().contains("d/dx")) {
     									 result +=  ((WAPlainText) element).getText();
+    									 if (body.toLowerCase().contains("integral") || body.toLowerCase().contains("integrate") ||
+    											 body.toLowerCase().contains("derivative")) {
+    										 break outerloop;
+    									 }
+    									 
     								 }
     							 } else {
     								 if (!((WAPlainText) element).getText().contains("Plot")) {
         								 System.out.println(((WAPlainText) element).getText());  
         								 result += ((WAPlainText) element).getText();
+        								 if (body.toLowerCase().contains("integral") || body.toLowerCase().contains("integrate") ||
+    											 body.toLowerCase().contains("derivative")) {
+    										 break outerloop;
+    									 }
         							 }
     							 }
     						 }
@@ -54,6 +68,10 @@ public interface Wolfram {
     		 }
     	 }
     	 
+    	 result = result.replace("+", " + ");
+    	 result = result.replace("-", " - ");
+    	 result = result.replace("constant", "C");
+    	 result = result.replace("=", "\n=");
     	 
     	 Communicate.sendText(result);
     }
