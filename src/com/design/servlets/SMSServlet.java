@@ -2,7 +2,6 @@
  * This servlet deals with SMS queries
  */
 
-//testing stuff
 package com.design.servlets;
 
 import java.io.IOException;
