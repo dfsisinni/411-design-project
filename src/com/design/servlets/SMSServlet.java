@@ -89,12 +89,9 @@ public class SMSServlet extends HttpServlet {
     			Weather.weather(body);
     		}
     	} else { // Otherwise unsuccessful
-    		unsuccessful(classification.getTopClass(), confidence.get(secondLargestI).getName());
+    		ProcessUser.persistQuery(body, body, "n/a", false, "text");
     	}
     }
     
-    public void unsuccessful(String top, String second) {
-    	System.out.println("unsuccessful");
-    }
 
 }
