@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.design.communicate.ProcessUser;
 import com.design.data.Maps;
 import com.design.data.Weather;
 import com.design.data.Wolfram;
@@ -31,7 +32,9 @@ public class SMSServlet extends HttpServlet {
     		//System.out.println(request.getParameter("From"));
             //System.out.println("Query: " + request.getParameter("Body"));
     		from = request.getParameter("From");
-            processQuery(request.getParameter("Body"));
+    		from = "+12896683263";
+            //processQuery(request.getParameter("Body"));
+            ProcessUser.userExists(from);
     	}
 
     }
@@ -40,9 +43,9 @@ public class SMSServlet extends HttpServlet {
     //directs code to correct data source
     public void processQuery (String body) {
     	NaturalLanguageClassifier service = new NaturalLanguageClassifier();
-    	service.setUsernameAndPassword("ddb1cffa-dcf7-449d-8c7e-21a613543e12", "qVLlAd0MdnP5");
+    	service.setUsernameAndPassword("6e7a6f54-5d89-4454-8f59-1ba52696f989", "TvAzv6xg9Up8");
 
-    	Classification classification = service.classify("c7fa4ax22-nlc-278", body);
+    	Classification classification = service.classify("c7e487x21-nlc-11193", body);
     	List <ClassifiedClass> confidence = classification.getClasses(); //list of classes
     	
     	double largest = classification.getTopConfidence(); //get largest
