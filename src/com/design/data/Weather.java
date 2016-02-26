@@ -1,3 +1,6 @@
+/**
+ * The Weather Module, to handle all weather type data
+ */
 package com.design.data;
 
 import java.io.IOException;

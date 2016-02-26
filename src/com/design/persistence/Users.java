@@ -1,3 +1,6 @@
+/**
+ * Maintains an SQL database of users
+ */
 package com.design.persistence;
 
 

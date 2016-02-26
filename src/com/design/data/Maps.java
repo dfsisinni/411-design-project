@@ -1,3 +1,6 @@
+/**
+ * The Maps Module, to handle all location based data
+ */
 package com.design.data;
 
 import java.io.InputStream;

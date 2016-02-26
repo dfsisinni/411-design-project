@@ -1,3 +1,6 @@
+/**
+ * This servlet deals with SMS queries
+ */
 package com.design.servlets;
 
 import java.io.IOException;
@@ -39,28 +42,28 @@ public class SMSServlet extends HttpServlet {
 
     }
     
-    //uses ibm natural language classifier
-    //directs code to correct data source
+    // Uses IBM natural language classifier
+    // Directs code to correct data source
     public void processQuery (String body) {
     	NaturalLanguageClassifier service = new NaturalLanguageClassifier();
     	service.setUsernameAndPassword("6e7a6f54-5d89-4454-8f59-1ba52696f989", "TvAzv6xg9Up8");
 
     	Classification classification = service.classify("c7e487x21-nlc-11193", body);
-    	List <ClassifiedClass> confidence = classification.getClasses(); //list of classes
+    	List <ClassifiedClass> confidence = classification.getClasses(); // List of classes
     	
-    	double largest = classification.getTopConfidence(); //get largest
+    	double largest = classification.getTopConfidence(); // Get largest
     	boolean success = true;
-    	int secondLargest; //used to keep track of 2nd highest confidence if difference is < 30% between highest & 2nd highest
+    	int secondLargestI; // Used to keep track of index of 2nd highest confidence if difference is < 30% between highest & 2nd highest
 
-    	//assigns initial value to 2nd largest
+    	// Assigns initial value to 2nd largest
     	if (classification.getTopClass().equals(confidence.get(0).getName())) {
-    		secondLargest = 1;
+    		secondLargestI = 1;
     	} else {
-    		secondLargest = 0;
+    		secondLargestI = 0;
     	}
     	
     	System.out.println(largest);
-    	//loop through confidence classes
+    	// Loop through confidence classes
     	for (int i = 0; i < confidence.size(); i++) {
     		
     		if (!confidence.get(i).getName().equals(classification.getTopClass())) {
@@ -68,15 +71,14 @@ public class SMSServlet extends HttpServlet {
         			success = false;
         		}
         		
-        		if (confidence.get(i).getConfidence() > confidence.get(secondLargest).getConfidence()) {
-        			secondLargest = i;
+        		if (confidence.get(i).getConfidence() > confidence.get(secondLargestI).getConfidence()) {
+        			secondLargestI = i;
         		}
     		}
     		
-    		
     	}
     	
-    	if (success) { //if successful map to correct data source
+    	if (success) { // If successful map to correct data source
     		System.out.println(classification.getTopClass());
     		if (classification.getTopClass().equals("directions")) {
     			Maps.googleMaps(body);
@@ -85,8 +87,8 @@ public class SMSServlet extends HttpServlet {
     		} else if (classification.getTopClass().equals("weather")) {
     			Weather.weather(body);
     		}
-    	} else { //otherwise unsuccessful
-    		unsuccessful(classification.getTopClass(), confidence.get(secondLargest).getName());
+    	} else { // Otherwise unsuccessful
+    		unsuccessful(classification.getTopClass(), confidence.get(secondLargestI).getName());
     	}
     }
     

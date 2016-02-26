@@ -1,3 +1,6 @@
+/**
+ * Processes and handles a user for the servlet
+ */
 package com.design.communicate;
 
 import java.util.Date;

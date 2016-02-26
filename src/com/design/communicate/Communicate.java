@@ -1,3 +1,6 @@
+/** 
+ * Communicate class is used to send results back to the user
+ */
 package com.design.communicate;
 
 import java.util.ArrayList;

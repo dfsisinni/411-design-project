@@ -1,3 +1,6 @@
+/**
+ * The Wolfram Module, deals with queries relevant to Wolfram Alpha
+ */
 package com.design.data;
 
 import com.design.communicate.Communicate;

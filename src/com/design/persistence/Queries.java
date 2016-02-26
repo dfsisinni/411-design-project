@@ -1,3 +1,6 @@
+/**
+ * Maintains an SQL database of all queries
+ */
 package com.design.persistence;
 
 
