@@ -6,6 +6,8 @@ package com.design.data;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -16,7 +18,26 @@ public interface Maps {
 	 public static void googleMaps (String query) {
 	    	System.out.println("Google Maps!");
 	 }
-	
+	 
+	 
+	 private static String [] (String query) {
+		 query=query.toLowerCase();
+		 String junkarray[]= {" how ", " directions ", " direction "," go "," starting "," at "};
+		 for(int i=0; i<junkarray.length; i++)
+		 {
+			 query=query.replace(junkarray[i], "");
+		 }
+		 String brokearray[]= query.split(" ");
+		 
+		 List <Integer> toList = new ArrayList<Integer>();
+		 List <Integer> fromList = new ArrayList<Integer>();
+		 
+		 
+		 
+		 return null; 	 
+	 	}
+	 
+	 
 	 public static String [] getLatLong (String text) {
 	    	String key = "AIzaSyAjXKpbYwL4CFbXVtNbLKKE9cOrlrsI05Q";
 	    	String query = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + text + "&types=geocode&key=" + key;
