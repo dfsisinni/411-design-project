@@ -53,7 +53,7 @@ public class Wolfram
 			System.out.println("Query error: " + queryResult.getErrorCode() + ": " + queryResult.getErrorMessage());
 			// WIP: Handles error from Wolfram querying
 		}
-		else if (queryResult.isSuccess())
+		else if (!queryResult.isSuccess())
 		{
 			System.out.println("Query not successful");
 			// WIP: Handles failure of Wolfram to return result for query
