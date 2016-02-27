@@ -5,16 +5,12 @@
     <servlet-name>SMSServlet</servlet-name>
     <servlet-class>com.design.servlets.SMSServlet</servlet-class>
   </servlet>
-  
   <servlet>
-  	<servlet-name>VoiceServlet</servlet-name>
+    <servlet-name>VoiceServlet</servlet-name>
     <servlet-class>com.design.servlets.VoiceServlet</servlet-class>
   </servlet>
-  
   <servlet>
-   <servlet-name>HandleRecording</servlet-name>
+    <servlet-name>HandleRecording</servlet-name>
     <servlet-class>com.design.servlets.HandleRecording</servlet-class>
   </servlet>
- 
-  
 </web-app>
