@@ -1,18 +1,17 @@
 package com.design.servlets;
 
-	import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-	import javax.servlet.http.HttpServletRequest;
-	import javax.servlet.http.HttpServletResponse;
 	import java.io.IOException;
-	import java.util.HashMap;
-	 
-	import com.twilio.sdk.verbs.TwiMLResponse;
-	import com.twilio.sdk.verbs.TwiMLException;
-	import com.twilio.sdk.verbs.Say;
-	import com.twilio.sdk.verbs.Record;
-	import com.twilio.sdk.verbs.Dial;
-import com.twilio.sdk.verbs.Play;
+
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.twilio.sdk.verbs.Dial;
+import com.twilio.sdk.verbs.Record;
+import com.twilio.sdk.verbs.Say;
+import com.twilio.sdk.verbs.TwiMLException;
+import com.twilio.sdk.verbs.TwiMLResponse;
 	 
 	
 	@WebServlet("/handle-servlet")
@@ -37,21 +36,27 @@ import com.twilio.sdk.verbs.Play;
 	            } catch (TwiMLException e) {
 	                e.printStackTrace();
 	            }
-	        } else if (digits != null && digits.equals("2")) {
+	        }
+	        else if (digits != null && digits.equals("2"))
+	        {
 	            Say pleaseLeaveMessage = new Say("Record your monkey howl after the tone.");
 	            // Record the caller's voice.
 	            Record record = new Record();
 	            record.setMaxLength(30);
-	            // You may need to change this to point to the location of your
-	            // servlet 
+	            // You may need to change this to point to the location of your servlet 
 	            record.setAction("/handle-recording");
-	            try {
+	            try
+	            {
 	                twiml.append(pleaseLeaveMessage);
 	                twiml.append(record);
-	            } catch (TwiMLException e) {
+	            }
+	            catch (TwiMLException e)
+	            {
 	                e.printStackTrace();
 	            }
-	        } else {
+	        }
+	        else
+	        {
 	            response.sendRedirect("/twiml");
 	            return;
 	        }
