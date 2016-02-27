@@ -10,12 +10,17 @@ package com.design.data;
 import com.design.communicate.Communicate;
 import com.wolfram.alpha.WAEngine;
 import com.wolfram.alpha.WAException;
+import com.wolfram.alpha.WAPod;
 import com.wolfram.alpha.WAQuery;
 import com.wolfram.alpha.WAQueryResult;
+import com.wolfram.alpha.WASubpod;
 
 // This was originally an interface, it may be better as a class or it may not be
 public class Wolfram
 {
+//	static int INPUT_POD_ID = 
+	static int NO_PODS_TO_INCL = 3;
+//	static int alwaysInclIDs = {}; // POD IDs to always include, if they exist for a query
 
 	public static void wolframAlpha(String queryStr)
 	{
@@ -25,9 +30,10 @@ public class Wolfram
     	WAEngine engine = new WAEngine();
     	engine.setAppID("7AHUTR-UV58KYXA8Q");
     	 
-    	// Query set up using parameter
+    	// Set up query with necessary parameters
     	WAQuery query = engine.createQuery();
     	query.setInput(queryStr);
+    	// query.addIncludePodID(arg0);
     	
     	// Query retrieval and error handling
     	WAQueryResult queryResult = null;
@@ -49,8 +55,8 @@ public class Wolfram
 		}
 		else if (queryResult.isSuccess())
 		{
-			System.out.println();
-			// WIP: Handles failure of Wolfram to find
+			System.out.println("Query not successful");
+			// WIP: Handles failure of Wolfram to return result for query
 		}
 		// Response generation
 		else
@@ -63,7 +69,40 @@ public class Wolfram
 			// 5. Sort through response
 			// 6. Generate result with parts of response
 
+			// Alt method:
+			// Include first few pods in output
+			// Have some pods, which if they exist for this entry, are always included
 			
+			// Retrieve result pods
+			WAPod[] pods = queryResult.getPods();
+			
+			// Result generation
+			
+			// Include pods which must always be included first (if they exist)
+			// WIP
+			// First few pods included
+			int podI = 0;
+			if (pods[podI].getID().equals("Input")) // Exclude 'Input interpretation' pod
+			{
+				podI++;
+			}
+			for (/* int podI = 0 */ ; podI < NO_PODS_TO_INCL || podI < pods.length; podI++)
+			{
+				if (!pods[podI].isError())
+				{
+					WASubpod[] subpods = pods[podI].getSubpods();
+					for (WASubpod subpod : subpods)
+					{
+						result.append(subpod.getTitle());
+						result.append(": ");
+						result.append(subpod.toString());
+						result.append('\n');
+					}
+				}
+			}
+			
+			// Include pods which must always be included at the end (if they exist)
+			// WIP
 		}
 
 			
