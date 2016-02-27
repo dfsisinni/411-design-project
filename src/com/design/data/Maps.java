@@ -41,7 +41,15 @@ public class Maps {
 			JsonReader json = Json.createReader(is);
 			JsonObject obj = json.readObject();	
 			
-			JsonArray arr = obj.getJsonArray("routes").getJsonObject(0).getJsonArray("steps");
+			JsonArray arr = null;
+			
+			try {
+				arr = obj.getJsonArray("routes").getJsonObject(0).getJsonArray("legs").getJsonObject(0).getJsonArray("steps");
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			
+			
 			
 			String directions = "";
 			
@@ -56,6 +64,12 @@ public class Maps {
 			{
 				directions = directions.replace(dumbPatterns[i], "");
 			}
+			
+			directions = directions.replace("<div style=\"font-size:0.9em\">", " ");
+			directions = directions.replace("</div>", "");
+			
+			
+			System.out.println(directions);
 			
 			Communicate.sendText(directions);
 			

@@ -39,6 +39,8 @@ public class SMSServlet extends HttpServlet {
     		from = "+12896683263";
             processQuery(request.getParameter("Body"));
             ProcessUser.userExists(from);
+            
+            System.out.println(request.getParameter("Body"));
     	}
 
     }
