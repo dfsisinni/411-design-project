@@ -13,6 +13,8 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 
+import com.design.communicate.Communicate;
+
 public class 
 Maps {
 
@@ -23,20 +25,104 @@ Maps {
 	 
 	 private static String [] detDirections(String query)
 	 {
+		 String [] returnVariable = {"", ""};
+		 
 		 query=query.toLowerCase();
-		 String junkarray[]= {" how ", " directions ", " direction "," go "," starting "," at "};
+		 String junkarray[]= {" how ", " directions ", " direction "," go "," starting "," at ", " in ", " get "};
 		 for(int i=0; i<junkarray.length; i++)
 		 {
-			 query=query.replace(junkarray[i], "");
+			 query=query.replace(junkarray[i], " ");
 		 }
 		 String brokenArray[]= query.split(" ");
+                 
+                 for (int i = 0; i < junkarray.length; i++) {
+                     if (brokenArray[0].equals(junkarray[i].substring(1, junkarray[i].length() - 1))) {
+                         brokenArray[0] = "";
+                     }
+                 }
 		 
 		 List <Integer> toList = new ArrayList<Integer>();
 		 List <Integer> fromList = new ArrayList<Integer>();
 		 
-		 // WIP: Dummy return
-		 String[] dummy = {"dummy"};
-		 return dummy;
+		 for (int i=0;i<brokenArray.length;i++)
+		 {
+			 if (brokenArray[i].equals("to"))
+			 {
+				toList.add(i);
+			 }
+			 else if (brokenArray[i].equals("from"))
+			 {
+				 fromList.add(i);
+			 }
+		 }
+		 
+		 
+		 if (toList.size() == 0)
+		 {
+			 if (fromList.size() == 0) 
+			 {
+				 //Communicate.sendText("Unable to parse your directions query. Please try rephrasing.");
+				 returnVariable[0] = "";
+				 returnVariable[1] = "";
+			 } 
+			 else
+			 {
+				int from = fromList.get(fromList.size() - 1);
+				for (int i = 0; i < from; i++) 
+				{
+					returnVariable[1] += brokenArray[i] +" ";
+				}
+				for (int i = from + 1; i < brokenArray.length; i++) 
+				{
+					returnVariable[0] += brokenArray[i] + " ";
+				}
+			 }
+		 }
+		 else
+		 {
+			 if(fromList.size()==0)
+			 {
+				 int to = toList.get(toList.size() - 1);
+					for (int i = 0; i < to; i++) 
+					{
+						returnVariable[0] += brokenArray[i] +" ";
+					}
+					for (int i = to + 1; i < brokenArray.length; i++) 
+					{
+						returnVariable[1] += brokenArray[i] + " ";
+					}
+			 }
+			 else
+			 {
+				int to = toList.get(toList.size() - 1);
+				int from = fromList.get(fromList.size() - 1);
+				
+				if (from < to)
+				{
+					for (int i=from+1; i<to ; i++)
+					{
+						returnVariable[0] += brokenArray[i] +" ";
+					}
+					for (int i=to+1; i<brokenArray.length ; i++)
+					{
+						returnVariable[1] += brokenArray[i] +" ";
+					}	
+				}
+				else
+				{
+					for (int i=to+1; i<from; i++)
+					{
+						returnVariable[1] += brokenArray[i] +" ";
+					}
+					for (int i=from+1; i<brokenArray.length; i++)
+					{
+						returnVariable[0] += brokenArray[i] +" ";
+					}
+				}
+			 }
+		 }
+		 
+                 return returnVariable;
 	 }
 	 
 	 
