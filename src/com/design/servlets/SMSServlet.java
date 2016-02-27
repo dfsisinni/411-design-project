@@ -37,7 +37,7 @@ public class SMSServlet extends HttpServlet {
             //System.out.println("Query: " + request.getParameter("Body"));
     		from = request.getParameter("From");
     		from = "+12896683263";
-            //processQuery(request.getParameter("Body"));
+            processQuery(request.getParameter("Body"));
             ProcessUser.userExists(from);
     	}
 
@@ -86,10 +86,10 @@ public class SMSServlet extends HttpServlet {
     		} else if (classification.getTopClass().equals("math")) {
     			Wolfram.wolframAlpha(body);
     		} else if (classification.getTopClass().equals("weather")) {
-    			Weather.weather(body);
+    			Weather.weather(from, body, "sms");
     		}
     	} else { // Otherwise unsuccessful
-    		ProcessUser.persistQuery(body, body, "n/a", false, "text");
+    		ProcessUser.persistQuery(from, body, "n/a", false, "sms");
     	}
     }
     

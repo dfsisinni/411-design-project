@@ -13,10 +13,11 @@ import org.bitpipeline.lib.owm.WeatherStatusResponse;
 import org.json.JSONException;
 
 import com.design.communicate.Communicate;
+import com.design.communicate.ProcessUser;
 
-public interface Weather {
+public class Weather {
 
-	public static void weather (String text) {
+	public static void weather (String from, String text, String type) {
     	text = text.toLowerCase();
     	text = text.replace("weather", "");
     	text = text.replace(" in ", "");
@@ -27,14 +28,14 @@ public interface Weather {
     	text = text.trim();
     	
     	if (text.contains(" ")) {
-    		latLonWeatherSearch(text);
+    		latLonWeatherSearch(from, text, type);
     	} else {
-    		normalWeatherSearch(text);	
+    		normalWeatherSearch(from, text, type);	
     	}
 			
     }
     
-    public static void latLonWeatherSearch (String text) {
+    public static void latLonWeatherSearch (String from, String text, String type) {
     	String output = ".\n";
     	text = text.replace(" ", "+");
 		String [] loc = Maps.getLatLong(text);
@@ -79,19 +80,22 @@ public interface Weather {
 	    	System.out.println(output);
 	    	
 	    	if (output.length() != 0) {
+	    		ProcessUser.persistQuery(from, text, "weather", true, type);
 	    		Communicate.sendText(output);
 	    	} else {
+	    		ProcessUser.persistQuery(from, text, "weather", false, type);
 	    		Communicate.sendText("Weather not found for specified location.");
 	    	}
 	    	
 		} else {
+			ProcessUser.persistQuery(from, text, "weather", false, type);
 			Communicate.sendText("Weather not found for specified location.");
 		}
 
 	}
     
     
-    public static void normalWeatherSearch (String orig) {
+    public static void normalWeatherSearch (String from, String orig, String type) {
     	String text = orig;
     	String output = ".\n";
     	OwmClient owm = new OwmClient ();
@@ -144,7 +148,9 @@ public interface Weather {
     	
     	if (output.length() != 0) {
     		Communicate.sendText(output);
+    		ProcessUser.persistQuery(from, orig, "weather", true, type);
     	} else {
+    		ProcessUser.persistQuery(from, orig, "weather", false, type);
     		Communicate.sendText("Weather not found for specified location.");
     	}
     }
