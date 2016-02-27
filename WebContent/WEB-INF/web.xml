@@ -13,4 +13,10 @@
     <servlet-name>HandleRecording</servlet-name>
     <servlet-class>com.design.servlets.HandleRecording</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>TwilioHandleKeyServlet</servlet-name>
+    <servlet-class>com.design.servlets.TwilioHandleKeyServlet</servlet-class>
+  </servlet>
+  
+  
 </web-app>

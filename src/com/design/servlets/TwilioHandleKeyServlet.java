@@ -1,6 +1,7 @@
 package com.design.servlets;
 
-	import javax.servlet.http.HttpServlet;
+	import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 	import javax.servlet.http.HttpServletRequest;
 	import javax.servlet.http.HttpServletResponse;
 	import java.io.IOException;
@@ -11,12 +12,18 @@ package com.design.servlets;
 	import com.twilio.sdk.verbs.Say;
 	import com.twilio.sdk.verbs.Record;
 	import com.twilio.sdk.verbs.Dial;
+import com.twilio.sdk.verbs.Play;
 	 
+	
+	@WebServlet("/handle-servlet")
+	
 	public class TwilioHandleKeyServlet extends HttpServlet {
 	 
 	    public void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	    	
+	    	System.out.println("Key Servlet");
 	 
-	        String digits = request.getParameter("Digits");
+	    	String digits = request.getParameter("Digits");
 	        TwiMLResponse twiml = new TwiMLResponse();
 	        if (digits != null && digits.equals("1")) {
 	            // Connect 310 555 1212 to the incoming caller.
