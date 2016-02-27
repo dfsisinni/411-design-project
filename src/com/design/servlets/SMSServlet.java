@@ -26,6 +26,9 @@ import com.ibm.watson.developer_cloud.natural_language_classifier.v1.model.Class
 
 @WebServlet("/sms")
 public class SMSServlet extends HttpServlet {
+	
+	public double queryTime;
+	
 	private static final long serialVersionUID = 1L;
 	
 	private static Users user = null;
@@ -38,6 +41,7 @@ public class SMSServlet extends HttpServlet {
     }
 
     public void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    	queryTime = System.currentTimeMillis();
     	if (request.getParameter("From") != null) {
     		//System.out.println(request.getParameter("From"));
             //System.out.println("Query: " + request.getParameter("Body"));
@@ -54,6 +58,7 @@ public class SMSServlet extends HttpServlet {
     // Uses IBM natural language classifier
     // Directs code to correct data source
     public void processQuery (String body) {
+
     	NaturalLanguageClassifier service = new NaturalLanguageClassifier();
     	service.setUsernameAndPassword("6e7a6f54-5d89-4454-8f59-1ba52696f989", "TvAzv6xg9Up8");
 
