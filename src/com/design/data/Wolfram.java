@@ -10,6 +10,7 @@ package com.design.data;
 import com.design.communicate.Communicate;
 import com.wolfram.alpha.WAEngine;
 import com.wolfram.alpha.WAException;
+import com.wolfram.alpha.WAPlainText;
 import com.wolfram.alpha.WAPod;
 import com.wolfram.alpha.WAQuery;
 import com.wolfram.alpha.WAQueryResult;
@@ -90,12 +91,19 @@ public class Wolfram
 			{
 				if (!pods[podI].isError())
 				{
+					result.append(pods[podI].getTitle());
+					result.append(": \n");
 					WASubpod[] subpods = pods[podI].getSubpods();
 					for (WASubpod subpod : subpods)
 					{
-						result.append(subpod.getTitle());
-						result.append(": ");
-						result.append(subpod.toString());
+						// Iterate through elements of the subpod and include plaintext elements
+						for (Object element : subpod.getContents())
+						{
+							if (element instanceof WAPlainText)
+							{
+								result.append(((WAPlainText) element).getText());
+							}
+						}
 						result.append('\n');
 					}
 				}
