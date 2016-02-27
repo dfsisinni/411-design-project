@@ -1,6 +1,6 @@
 package com.design.servlets;
 
-	import java.io.IOException;
+import java.io.IOException;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,24 +16,30 @@ import com.twilio.sdk.verbs.TwiMLResponse;
 	
 	@WebServlet("/handle-servlet")
 	
-	public class TwilioHandleKeyServlet extends HttpServlet {
+	public class TwilioHandleKeyServlet extends HttpServlet
+	{
 	 
-	    public void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	    public void service(HttpServletRequest request, HttpServletResponse response) throws IOException
+	    {
 	    	
 	    	System.out.println("Key Servlet");
 	 
 	    	String digits = request.getParameter("Digits");
 	        TwiMLResponse twiml = new TwiMLResponse();
-	        if (digits != null && digits.equals("1")) {
+	        if (digits != null && digits.equals("1"))
+	        {
 	            // Connect 310 555 1212 to the incoming caller.
 	            Dial dial = new Dial("+13105551212");
 	 
 	            // If the above dial failed, say an error message.
 	            Say say = new Say("The call failed, or the remote party hung up. Goodbye.");
-	            try { 
+	            try
+	            { 
 	                twiml.append(dial);
 	                twiml.append(say);
-	            } catch (TwiMLException e) {
+	            }
+	            catch (TwiMLException e)
+	            {
 	                e.printStackTrace();
 	            }
 	        }
