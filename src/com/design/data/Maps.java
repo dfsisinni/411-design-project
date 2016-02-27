@@ -15,15 +15,17 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 
 import com.design.communicate.Communicate;
+import com.design.communicate.ProcessUser;
+import com.design.persistence.Queries;
 
 public class Maps {
 
-	 public static void googleMaps (String query) {
+	 public static void googleMaps (Queries query) {
 		 String [] results = detDirections(query);
-		 getAPIResults(results); 
+		 boolean some = getAPIResults(results, query); 
 	 }
 	 
-	 private static void getAPIResults (String [] parameters) {
+	 private static boolean getAPIResults (String [] parameters, Queries qu) {
 		 String query = "https://maps.googleapis.com/maps/api/directions/json?origin=" + parameters[0] +"&"
 		 		+ "destination=" + parameters[1] + "&key=AIzaSyBbcq6id_NE2X_M-Fr7vXqCV6DLLYcDZ78";
 		 query = query.replace(" ", "+");
@@ -32,8 +34,13 @@ public class Maps {
 		 try {
 			url = new URL(query);
 		 } catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
+			
+			qu.setSuccessful(false);
+			qu.setResponseTime("Here");
+			ProcessUser.persistDirection(parameters, qu);
 			e.printStackTrace();
+			
+			return false;
 		 }
 			
 		 try {
@@ -46,7 +53,12 @@ public class Maps {
 			try {
 				arr = obj.getJsonArray("routes").getJsonObject(0).getJsonArray("legs").getJsonObject(0).getJsonArray("steps");
 			} catch (Exception ex) {
+				qu.setSuccessful(false);
+				qu.setResponseTime("Here");
+				ProcessUser.persistDirection(parameters, qu);
 				ex.printStackTrace();
+				
+				return false;
 			}
 			
 			
@@ -71,16 +83,23 @@ public class Maps {
 			
 			System.out.println(directions);
 			
-			Communicate.sendText(directions);
+			Communicate.sendText(directionsasdas);
 			
 		 } catch (Exception ex) {
-			ex.printStackTrace();
+			 qu.setSuccessful(false);
+				qu.setResponseTime("Here");
+				ProcessUser.persistDirection(parameters, qu);
+				ex.printStackTrace();
+				
+				return false;
 		 }
+		 return true;
 	 }
 	 
 	 
-	 private static String [] detDirections(String query)
+	 private static String [] detDirections(Queries qu)
 	 {
+		 String query = qu.getQuery();
 		 String [] returnVariable = {"", ""};
 		 
 		 query=query.toLowerCase();

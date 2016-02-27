@@ -4,6 +4,8 @@
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		<class>com.design.persistence.Queries</class>
 		<class>com.design.persistence.Users</class>
+		<class>com.design.persistence.News</class>
+		<class>com.design.persistence.Directions</class>
 		
 		<properties>
 			<property name="javax.persistence.jdbc.user" value="root"/>

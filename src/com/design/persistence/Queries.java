@@ -1,12 +1,14 @@
-/**
- * Maintains an SQL database of all queries
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 package com.design.persistence;
-
 
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -14,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -33,7 +36,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Queries.findByQuery", query = "SELECT q FROM Queries q WHERE q.query = :query"),
     @NamedQuery(name = "Queries.findByTime", query = "SELECT q FROM Queries q WHERE q.time = :time"),
     @NamedQuery(name = "Queries.findByType", query = "SELECT q FROM Queries q WHERE q.type = :type"),
-    @NamedQuery(name = "Queries.findBySuccessful", query = "SELECT q FROM Queries q WHERE q.successful = :successful")})
+    @NamedQuery(name = "Queries.findBySuccessful", query = "SELECT q FROM Queries q WHERE q.successful = :successful"),
+    @NamedQuery(name = "Queries.findByConfidence", query = "SELECT q FROM Queries q WHERE q.confidence = :confidence"),
+    @NamedQuery(name = "Queries.findByResponseTime", query = "SELECT q FROM Queries q WHERE q.responseTime = :responseTime")})
 public class Queries implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -51,6 +56,15 @@ public class Queries implements Serializable {
     private String type;
     @Column(name = "successful")
     private Boolean successful;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Column(name = "confidence")
+    private Double confidence;
+    @Column(name = "responseTime")
+    private Double responseTime;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "queries")
+    private News news;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "queries")
+    private Directions directions;
     @JoinColumn(name = "phone", referencedColumnName = "phone")
     @ManyToOne
     private Users phone;
@@ -110,6 +124,38 @@ public class Queries implements Serializable {
         this.successful = successful;
     }
 
+    public Double getConfidence() {
+        return confidence;
+    }
+
+    public void setConfidence(Double confidence) {
+        this.confidence = confidence;
+    }
+
+    public Double getResponseTime() {
+        return responseTime;
+    }
+
+    public void setResponseTime(Double responseTime) {
+        this.responseTime = responseTime;
+    }
+
+    public News getNews() {
+        return news;
+    }
+
+    public void setNews(News news) {
+        this.news = news;
+    }
+
+    public Directions getDirections() {
+        return directions;
+    }
+
+    public void setDirections(Directions directions) {
+        this.directions = directions;
+    }
+
     public Users getPhone() {
         return phone;
     }
@@ -144,4 +190,3 @@ public class Queries implements Serializable {
     }
     
 }
-

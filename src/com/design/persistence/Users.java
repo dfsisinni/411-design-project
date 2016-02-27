@@ -1,12 +1,13 @@
-/**
- * Maintains an SQL database of users
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 package com.design.persistence;
 
-
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,8 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Users.findAll", query = "SELECT u FROM Users u"),
     @NamedQuery(name = "Users.findByPhone", query = "SELECT u FROM Users u WHERE u.phone = :phone"),
-    @NamedQuery(name = "Users.findByFirstUse", query = "SELECT u FROM Users u WHERE u.firstUse = :firstUse"),
-    @NamedQuery(name = "Users.findByHomeLocation", query = "SELECT u FROM Users u WHERE u.homeLocation = :homeLocation")})
+    @NamedQuery(name = "Users.findByFirstUse", query = "SELECT u FROM Users u WHERE u.firstUse = :firstUse")})
 public class Users implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -41,10 +41,8 @@ public class Users implements Serializable {
     @Column(name = "firstUse")
     @Temporal(TemporalType.TIMESTAMP)
     private Date firstUse;
-    @Column(name = "homeLocation")
-    private String homeLocation;
     @OneToMany(mappedBy = "phone")
-    private Collection<Queries> queriesCollection;
+    private List<Queries> queriesList;
 
     public Users() {
     }
@@ -69,21 +67,13 @@ public class Users implements Serializable {
         this.firstUse = firstUse;
     }
 
-    public String getHomeLocation() {
-        return homeLocation;
-    }
-
-    public void setHomeLocation(String homeLocation) {
-        this.homeLocation = homeLocation;
-    }
-
     @XmlTransient
-    public Collection<Queries> getQueriesCollection() {
-        return queriesCollection;
+    public List<Queries> getQueriesList() {
+        return queriesList;
     }
 
-    public void setQueriesCollection(Collection<Queries> queriesCollection) {
-        this.queriesCollection = queriesCollection;
+    public void setQueriesList(List<Queries> queriesList) {
+        this.queriesList = queriesList;
     }
 
     @Override

@@ -9,6 +9,9 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 
+import com.design.data.Weather;
+import com.design.persistence.Directions;
+import com.design.persistence.News;
 import com.design.persistence.Queries;
 import com.design.persistence.Users;
 
@@ -16,10 +19,9 @@ public interface ProcessUser {
 	
 	static EntityManager em = Persistence.createEntityManagerFactory("DesignProject").createEntityManager();
 
-	public static void userExists (String from) {
+	public static Users userExists (String from) {
 		Users user = new Users();
 		user.setPhone(from);
-		user.setHomeLocation(null);
 		user.setFirstUse(new Date());
 		
 		String str = "SELECT x FROM Users AS x WHERE x.phone='" + from + "'";
@@ -29,33 +31,54 @@ public interface ProcessUser {
 			em.getTransaction().begin();
 			em.persist(user);
 			em.getTransaction().commit();
+			return user;
+		} else {
+			return users.get(0);
 		}
 	}
 	
-	public static void persistQuery(String from, String quer, String cla, boolean suc, String type) {
-		String str = "SELECT x FROM Users AS x WHERE x.phone='" + from + "'";
-		Users users = (Users) em.createQuery(str).getResultList().get(0);
+	public static void persistWeather (Weather weather, Queries query) {
 		
-		str = "SELECT x FROM Queries AS x";
+	}
+	
+	public static void persistDirection (Directions dirc, Queries query) {
+		dirc.setId(persistQuery(query));
+		
+		em.getTransaction().begin();
+		em.persist(dirc);
+		em.getTransaction().commit();
+	}
+	
+	public static void persistNews (News news, Queries query) {
+		news.setId(persistQuery(query));
+		
+		em.getTransaction().begin();
+		em.persist(news);
+		em.getTransaction().commit();
+	}
+	
+	public static void persistWolfram () {
+		
+	}
+	
+	public static int persistQuery (Queries query) {
+		String str = "SELECT x FROM Queries AS x";
 		List <Queries> qu = em.createQuery(str).getResultList();
 		
-		Queries query = new Queries();
-		query.setClass1(cla);
-		query.setPhone(users);
-		query.setSuccessful(suc);
-		query.setQuery(quer);
-		query.setTime(new Date());
-		query.setType(type);
+		int id = 1;
 		
-		if (qu == null) {
-			query.setId(qu.size() + 1);
-		} else {
-			query.setId(1);
+		if (qu != null && qu.size() > 1) {
+			id = qu.size() + 1;
 		}		
+		
+		query.setId(id);
 		
 		em.getTransaction().begin();
 		em.persist(query);
 		em.getTransaction().commit();
+		
+		return id;
 	}
+	
 
 }
