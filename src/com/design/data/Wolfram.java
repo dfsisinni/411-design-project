@@ -107,6 +107,10 @@ public class Wolfram
 						result.append('\n');
 					}
 				}
+				else
+				{
+					podI--;
+				}
 			}
 			
 			// Include pods which must always be included at the end (if they exist)
