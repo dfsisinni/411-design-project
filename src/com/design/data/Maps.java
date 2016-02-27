@@ -13,29 +13,31 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 
-public interface Maps {
+public class 
+Maps {
 
 	 public static void googleMaps (String query) {
 	    	System.out.println("Google Maps!");
 	 }
 	 
 	 
-	 private static String [] (String query) {
+	 private static String [] detDirections(String query)
+	 {
 		 query=query.toLowerCase();
 		 String junkarray[]= {" how ", " directions ", " direction "," go "," starting "," at "};
 		 for(int i=0; i<junkarray.length; i++)
 		 {
 			 query=query.replace(junkarray[i], "");
 		 }
-		 String brokearray[]= query.split(" ");
+		 String brokenArray[]= query.split(" ");
 		 
 		 List <Integer> toList = new ArrayList<Integer>();
 		 List <Integer> fromList = new ArrayList<Integer>();
 		 
-		 
-		 
-		 return null; 	 
-	 	}
+		 // WIP: Dummy return
+		 String[] dummy = {"dummy"};
+		 return dummy;
+	 }
 	 
 	 
 	 public static String [] getLatLong (String text) {
