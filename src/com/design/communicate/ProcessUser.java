@@ -15,7 +15,11 @@ import com.design.persistence.News;
 import com.design.persistence.Queries;
 import com.design.persistence.Users;
 
-public interface ProcessUser {
+public class ProcessUser {
+	
+	public ProcessUser () {
+		
+	}
 	
 	static EntityManager em = Persistence.createEntityManagerFactory("DesignProject").createEntityManager();
 
@@ -26,6 +30,7 @@ public interface ProcessUser {
 		
 		String str = "SELECT x FROM Users AS x WHERE x.phone='" + from + "'";
 		List <Users> users = em.createQuery(str).getResultList();
+		
 		
 		if (users == null || users.size() == 0) {
 			em.getTransaction().begin();
@@ -41,13 +46,36 @@ public interface ProcessUser {
 		
 	}
 	
-	public static void persistDirection (Directions dirc, Queries query) {
-		dirc.setId(persistQuery(query));
+	public static void persistDirection (String [] data, Queries query, int distance, int time) {
+		persistDirection(data, query, distance, time, null);
+	}
+	
+	public static void persistDirection (String [] data, Queries query, int distance, int time, String directions) {
+		Directions dirc = new Directions();
+		dirc.setDestination(data[1]);
+		dirc.setOrigin(data[0]);
+		dirc.setQueries(query);
+		dirc.setTime((double) time);
+		dirc.setDistance((double) distance);
+		
+		
+		if (directions == null) {
+			Communicate.sendText("Unable to parse your directions query.");
+		} else {
+			Communicate.sendText(directions);
+		}
+	
+		
+		int id = persistQuery(query);
+		dirc.setId(id);
+		dirc.getQueries().setId(id);
 		
 		em.getTransaction().begin();
 		em.persist(dirc);
 		em.getTransaction().commit();
 	}
+	
+	
 	
 	public static void persistNews (News news, Queries query) {
 		news.setId(persistQuery(query));
@@ -65,13 +93,17 @@ public interface ProcessUser {
 		String str = "SELECT x FROM Queries AS x";
 		List <Queries> qu = em.createQuery(str).getResultList();
 		
+		System.out.println("Queries: " + qu.size());
+		
 		int id = 1;
 		
-		if (qu != null && qu.size() > 1) {
+		if (qu != null && qu.size() > 0) {
 			id = qu.size() + 1;
 		}		
 		
 		query.setId(id);
+		
+		System.out.println("Phone #:" + query.getPhone().getPhone());
 		
 		em.getTransaction().begin();
 		em.persist(query);

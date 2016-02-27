@@ -27,28 +27,34 @@ import com.ibm.watson.developer_cloud.natural_language_classifier.v1.model.Class
 @WebServlet("/sms")
 public class SMSServlet extends HttpServlet {
 	
-	public double queryTime;
+	public static double queryTime = System.currentTimeMillis();
 	
 	private static final long serialVersionUID = 1L;
 	
-	private static Users user = null;
-
-	
 	public static String from;
+	
+	public Users user;
 	
     public SMSServlet() {
         super();
     }
 
     public void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    	queryTime = System.currentTimeMillis();
     	if (request.getParameter("From") != null) {
     		//System.out.println(request.getParameter("From"));
             //System.out.println("Query: " + request.getParameter("Body"));
+    		
     		from = request.getParameter("From");
     		from = "+12896683263";
+    		user = ProcessUser.userExists(from);
+    		
+    		
             processQuery(request.getParameter("Body"));
-            user = ProcessUser.userExists(from);
+            
+            System.out.println("Users #" + user.getPhone());
+            if (user == null) {
+            	System.out.println("user = null");
+            } 
             
             System.out.println(request.getParameter("Body"));
     	}
@@ -76,7 +82,6 @@ public class SMSServlet extends HttpServlet {
     		secondLargestI = 0;
     	}
     	
-    	System.out.println(largest);
     	// Loop through confidence classes
     	for (int i = 0; i < confidence.size(); i++) {
     		
@@ -91,12 +96,13 @@ public class SMSServlet extends HttpServlet {
     		}
     		
     	}
-    	
+  
     	Queries query = new Queries();
 		query.setConfidence(classification.getTopConfidence());
 		query.setDirections(null);
 		query.setNews(null);
 		query.setPhone(user);
+
 		query.setQuery(body);
 		query.setTime(new Date());
 		query.setType("sms");
@@ -108,13 +114,13 @@ public class SMSServlet extends HttpServlet {
     			Maps.googleMaps(query);
     		} else if (classification.getTopClass().equals("math")) {
     			query.setClass1("math");
-    			Wolfram.wolframAlpha(query);
+    			//Wolfram.wolframAlpha(query);
     		} else if (classification.getTopClass().equals("weather")) {
     			query.setClass1("weather");
-    			Weather.weather(query);
+    			//Weather.weather(query);
     		} else if (classification.getTopClass().equals("news")) {
     			query.setClass1("news");
-    			News.getNews(query);
+    			//News.getNews(query);
     		}
     		else
     		{

@@ -16,7 +16,9 @@ import javax.json.JsonReader;
 
 import com.design.communicate.Communicate;
 import com.design.communicate.ProcessUser;
+import com.design.persistence.Directions;
 import com.design.persistence.Queries;
+import com.design.servlets.SMSServlet;
 
 public class Maps {
 
@@ -25,10 +27,13 @@ public class Maps {
 		 boolean some = getAPIResults(results, query); 
 	 }
 	 
-	 private static boolean getAPIResults (String [] parameters, Queries qu) {
+	 private static boolean getAPIResults (String [] parameters, Queries qu) {		 
 		 String query = "https://maps.googleapis.com/maps/api/directions/json?origin=" + parameters[0] +"&"
 		 		+ "destination=" + parameters[1] + "&key=AIzaSyBbcq6id_NE2X_M-Fr7vXqCV6DLLYcDZ78";
 		 query = query.replace(" ", "+");
+		 
+		 int distance = 0;
+		 int time = 0;
 		 
 		 URL url = null;
 		 try {
@@ -36,8 +41,8 @@ public class Maps {
 		 } catch (MalformedURLException e) {
 			
 			qu.setSuccessful(false);
-			qu.setResponseTime("Here");
-			ProcessUser.persistDirection(parameters, qu);
+			qu.setResponseTime(((double) System.currentTimeMillis() - SMSServlet.queryTime)/1000);
+			ProcessUser.persistDirection(parameters, qu, distance, time);
 			e.printStackTrace();
 			
 			return false;
@@ -48,18 +53,23 @@ public class Maps {
 			JsonReader json = Json.createReader(is);
 			JsonObject obj = json.readObject();	
 			
+			JsonObject objn = null;
 			JsonArray arr = null;
 			
 			try {
-				arr = obj.getJsonArray("routes").getJsonObject(0).getJsonArray("legs").getJsonObject(0).getJsonArray("steps");
+				objn = obj.getJsonArray("routes").getJsonObject(0).getJsonArray("legs").getJsonObject(0);
+				distance=objn.getJsonObject("distance").getJsonNumber("value").intValue()/1000;
+				time = objn.getJsonObject("duration").getJsonNumber("value").intValue()/3600;
+				arr = objn.getJsonArray("steps");
 			} catch (Exception ex) {
 				qu.setSuccessful(false);
-				qu.setResponseTime("Here");
-				ProcessUser.persistDirection(parameters, qu);
+				qu.setResponseTime(((double) System.currentTimeMillis() - SMSServlet.queryTime)/1000);
+				ProcessUser.persistDirection(parameters, qu, distance, time);
 				ex.printStackTrace();
 				
 				return false;
 			}
+			
 			
 			
 			
@@ -81,17 +91,19 @@ public class Maps {
 			directions = directions.replace("</div>", "");
 			
 			
-			System.out.println(directions);
+			//System.out.println(directions);
 			
-			Communicate.sendText(directionsasdas);
+			qu.setSuccessful(true);
+			qu.setResponseTime(((double) System.currentTimeMillis() - SMSServlet.queryTime)/1000);
+			ProcessUser.persistDirection(parameters, qu, distance, time, directions);
 			
 		 } catch (Exception ex) {
 			 qu.setSuccessful(false);
-				qu.setResponseTime("Here");
-				ProcessUser.persistDirection(parameters, qu);
-				ex.printStackTrace();
+			 qu.setResponseTime(((double) System.currentTimeMillis() - SMSServlet.queryTime)/1000);
+			 ProcessUser.persistDirection(parameters, qu, distance, time);
+			 ex.printStackTrace();
 				
-				return false;
+			 return false;
 		 }
 		 return true;
 	 }
