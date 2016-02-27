@@ -86,7 +86,7 @@ public class Wolfram
 			{
 				podI++;
 			}
-			for (/* int podI = 0 */ ; podI < NO_PODS_TO_INCL || podI < pods.length; podI++)
+			for (/* int podI = 0 */ ; podI < NO_PODS_TO_INCL && podI < pods.length; podI++)
 			{
 				if (!pods[podI].isError())
 				{
