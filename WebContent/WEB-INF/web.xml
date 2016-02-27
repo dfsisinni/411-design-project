@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
   <display-name>DesignProject</display-name>
-   <servlet>
-        <servlet-name>SMSServlet</servlet-name>
-        <servlet-class>com.design.servlets.SMSServlet</servlet-class>
-    </servlet>
+  <servlet>
+    <servlet-name>SMSServlet</servlet-name>
+    <servlet-class>com.design.servlets.SMSServlet</servlet-class>
+  </servlet>
+  
+  <servlet>
+  	<servlet-name>VoiceServlet</servlet-name>
+    <servlet-class>com.design.servlets.VoiceServlet</servlet-class>
+  </servlet>
+  
+  <servlet>
+   <servlet-name>HandleRecording</servlet-name>
+    <servlet-class>com.design.servlets.HandleRecording</servlet-class>
+  </servlet>
+ 
+  
 </web-app>
