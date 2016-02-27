@@ -15,7 +15,7 @@ public class News {
 	
 	}
 	
-	public void getNews(String query, String type){
+	public static void getNews(String query, String type){
 		
 		query=query.replace(" ", "+");
 		
@@ -38,7 +38,11 @@ public class News {
 			int num = 3;
 			
 			if (type.equals("sms")) {
-				num = 5;
+				if (results.size() > 5) {
+					num = 5;
+				} else {
+					num = results.size();
+				}
 			}
 			
 			for (int i = 0; i < num; i++) {

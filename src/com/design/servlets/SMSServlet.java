@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.design.communicate.ProcessUser;
 import com.design.data.Maps;
+import com.design.data.News;
 import com.design.data.Weather;
 import com.design.data.Wolfram;
 import com.ibm.watson.developer_cloud.natural_language_classifier.v1.NaturalLanguageClassifier;
@@ -51,7 +52,7 @@ public class SMSServlet extends HttpServlet {
     	NaturalLanguageClassifier service = new NaturalLanguageClassifier();
     	service.setUsernameAndPassword("6e7a6f54-5d89-4454-8f59-1ba52696f989", "TvAzv6xg9Up8");
 
-    	Classification classification = service.classify("c7e487x21-nlc-11193", body);
+    	Classification classification = service.classify("c7fa4ax22-nlc-10514", body);
     	List <ClassifiedClass> confidence = classification.getClasses(); // List of classes
     	
     	double largest = classification.getTopConfidence(); // Get largest
@@ -89,6 +90,8 @@ public class SMSServlet extends HttpServlet {
     			Wolfram.wolframAlpha(body);
     		} else if (classification.getTopClass().equals("weather")) {
     			Weather.weather(from, body, "sms");
+    		} else if (classification.getTopClass().equals("news")) {
+    			News.getNews(body, "sms");
     		}
     	} else { // Otherwise unsuccessful
     		ProcessUser.persistQuery(from, body, "n/a", false, "sms");
