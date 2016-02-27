@@ -14,33 +14,41 @@ import com.wolfram.alpha.WASubpod;
 
 public interface Wolfram {
 
-	public static void wolframAlpha(String body) {
+	public static void wolframAlpha(String body)
+	{
     	String result = ".\n";
     	
-    	 WAEngine engine = new WAEngine();
-    	 engine.setAppID("7AHUTR-UV58KYXA8Q");
+    	WAEngine engine = new WAEngine();
+    	engine.setAppID("7AHUTR-UV58KYXA8Q");
     	 
-    	 WAQuery query = engine.createQuery();
-    	 query.setInput(body);
+    	WAQuery query = engine.createQuery();
+    	query.setInput(body);
     	 
-    	 WAQueryResult queryResult = null;
-		try {
+    	WAQueryResult queryResult = null;
+    	
+		try
+		{
 			queryResult = engine.performQuery(query);
-		} catch (WAException e) {
+		}
+		catch (WAException e)
+		{
+			// WIP: Handle WA engine errors
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     	 
-    	 if (queryResult.isError()) {
-    		 
-    	 } else {
-    		 outerloop:
-    		 
-    		 for (WAPod pod : queryResult.getPods()) {
-    			 if (!pod.isError()) {
-    				 
-    				
-    				 
+		if (queryResult.isError())
+		{
+    		 // WIP: Handles error from Wolfram querying
+		}
+		
+		else {
+			outerloop:
+
+				for (WAPod pod : queryResult.getPods()) {
+
+					if (!pod.isError()) {
+
     				 for (WASubpod subpod : pod.getSubpods()) {
     					 for (Object element : subpod.getContents()) {
     						 if (element instanceof WAPlainText) {
