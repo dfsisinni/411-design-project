@@ -93,6 +93,10 @@ public class SMSServlet extends HttpServlet {
     		} else if (classification.getTopClass().equals("news")) {
     			News.getNews(body, "sms");
     		}
+    		else
+    		{
+    			Wolfram.wolframAlpha(body);
+    		}
     	} else { // Otherwise unsuccessful
     		ProcessUser.persistQuery(from, body, "n/a", false, "sms");
     	}
