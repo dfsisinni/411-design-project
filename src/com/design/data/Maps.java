@@ -10,16 +10,58 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 
 import com.design.communicate.Communicate;
 
-public class 
-Maps {
+public class Maps {
 
 	 public static void googleMaps (String query) {
-	    	System.out.println("Google Maps!");
+		 String [] results = detDirections(query);
+		 getAPIResults(results); 
+	 }
+	 
+	 private static void getAPIResults (String [] parameters) {
+		 String query = "https://maps.googleapis.com/maps/api/directions/json?origin=" + parameters[0] +"&"
+		 		+ "destination=" + parameters[1] + "&key=AIzaSyBbcq6id_NE2X_M-Fr7vXqCV6DLLYcDZ78";
+		 query = query.replace(" ", "+");
+		 
+		 URL url = null;
+		 try {
+			url = new URL(query);
+		 } catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		 }
+			
+		 try {
+			InputStream is = url.openStream();
+			JsonReader json = Json.createReader(is);
+			JsonObject obj = json.readObject();	
+			
+			JsonArray arr = obj.getJsonArray("routes").getJsonObject(0).getJsonArray("steps");
+			
+			String directions = "";
+			
+			for (int i = 0; i < arr.size(); i++) {
+				directions += (i + 1) +". ";
+				directions += arr.getJsonObject(i).getJsonString("html_instructions").getString();
+				directions += "\n";
+			}
+			
+			String [] dumbPatterns = {"\u003cb\u003e", "\u003c/b\u003e"};
+			for (int i=0; i < dumbPatterns.length; i++)
+			{
+				directions = directions.replace(dumbPatterns[i], "");
+			}
+			
+			Communicate.sendText(directions);
+			
+		 } catch (Exception ex) {
+			ex.printStackTrace();
+		 }
 	 }
 	 
 	 
