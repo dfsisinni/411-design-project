@@ -120,7 +120,7 @@ public class SMSServlet extends HttpServlet {
     			//Weather.weather(query);
     		} else if (classification.getTopClass().equals("news")) {
     			query.setClass1("news");
-    			//News.getNews(query);
+    			News.getNews(query);
     		}
     		else
     		{

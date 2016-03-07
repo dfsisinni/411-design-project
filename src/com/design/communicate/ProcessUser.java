@@ -47,24 +47,27 @@ public class ProcessUser {
 	}
 	
 	public static void persistDirection (String [] data, Queries query, int distance, int time) {
-		persistDirection(data, query, distance, time, null);
+		if (query.getType().equals("sms")) {
+			persistDirection(data, query, distance, time, null);
+		} else {
+			
+		}
+		
 	}
 	
 	public static void persistDirection (String [] data, Queries query, int distance, int time, String directions) {
+		if (directions == null) {
+			Communicate.sendText("Unable to parse your directions query.");
+		} else {
+			Communicate.sendText(directions);
+		}
+		
 		Directions dirc = new Directions();
 		dirc.setDestination(data[1]);
 		dirc.setOrigin(data[0]);
 		dirc.setQueries(query);
 		dirc.setTime((double) time);
 		dirc.setDistance((double) distance);
-		
-		
-		if (directions == null) {
-			Communicate.sendText("Unable to parse your directions query.");
-		} else {
-			Communicate.sendText(directions);
-		}
-	
 		
 		int id = persistQuery(query);
 		dirc.setId(id);
@@ -77,8 +80,26 @@ public class ProcessUser {
 	
 	
 	
-	public static void persistNews (News news, Queries query) {
-		news.setId(persistQuery(query));
+	public static void persistNews (Queries query, String publisher, String message) {
+		if (query.getType().equals("sms")) {
+			if (message == null) {
+				Communicate.sendText("Unable to parse your news query.");
+			} else {
+				Communicate.sendText(message);
+			}
+		} else {
+			
+		}
+		
+		News news = new News();
+		news.setPublisher(publisher);
+		news.setQueries(query);
+		
+		int id = persistQuery(query);
+		news.setId(id);
+		news.getQueries().setId(id);
+		
+		
 		
 		em.getTransaction().begin();
 		em.persist(news);
