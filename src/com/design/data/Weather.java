@@ -14,10 +14,14 @@ import org.json.JSONException;
 
 import com.design.communicate.Communicate;
 import com.design.communicate.ProcessUser;
+import com.design.persistence.Queries;
+import com.design.servlets.SMSServlet;
 
 public class Weather {
 
-	public static void weather (String from, String text, String type) {
+	public static void weather (Queries query) {
+		
+		String text = query.getQuery();
     	text = text.toLowerCase();
     	text = text.replace("weather", "");
     	text = text.replace(" in ", "");
@@ -28,14 +32,14 @@ public class Weather {
     	text = text.trim();
     	
     	if (text.contains(" ")) {
-    		latLonWeatherSearch(from, text, type);
+    		latLonWeatherSearch(query, text);
     	} else {
-    		normalWeatherSearch(from, text, type);	
+    		normalWeatherSearch(query, text);	
     	}
 			
     }
     
-    public static void latLonWeatherSearch (String from, String text, String type) {
+    public static void latLonWeatherSearch (Queries query, String text) {
     	String output = ".\n";
     	text = text.replace(" ", "+");
 		String [] loc = Maps.getLatLong(text);
@@ -80,23 +84,26 @@ public class Weather {
 	    	System.out.println(output);
 	    	
 	    	if (output.length() != 0) {
-	    		ProcessUser.persistQuery(from, text, "weather", true, type);
-	    		Communicate.sendText(output);
+	    		query.setSuccessful(true);
+	    		query.setResponseTime(((double) System.currentTimeMillis() - SMSServlet.queryTime)/1000);
+	    		ProcessUser.persistWeather(query, output);
 	    	} else {
-	    		ProcessUser.persistQuery(from, text, "weather", false, type);
-	    		Communicate.sendText("Weather not found for specified location.");
+	    		query.setSuccessful(false);
+	    		query.setResponseTime(((double) System.currentTimeMillis() - SMSServlet.queryTime)/1000);
+	    		ProcessUser.persistWeather(query, output);
 	    	}
 	    	
 		} else {
-			ProcessUser.persistQuery(from, text, "weather", false, type);
-			Communicate.sendText("Weather not found for specified location.");
+			query.setSuccessful(false);
+    		query.setResponseTime(((double) System.currentTimeMillis() - SMSServlet.queryTime)/1000);
+    		ProcessUser.persistWeather(query, output);
 		}
 
 	}
     
     
-    public static void normalWeatherSearch (String from, String orig, String type) {
-    	String text = orig;
+    public static void normalWeatherSearch (Queries query, String text) {
+
     	String output = ".\n";
     	OwmClient owm = new OwmClient ();
     	WeatherStatusResponse currentWeather = null;
@@ -120,6 +127,7 @@ public class Weather {
 			forecast = owm.forecastWeatherAtCity(text);
 		} catch (IOException e) {
 			e.printStackTrace();
+			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -147,11 +155,13 @@ public class Weather {
     	System.out.println(output);
     	
     	if (output.length() != 0) {
-    		Communicate.sendText(output);
-    		ProcessUser.persistQuery(from, orig, "weather", true, type);
+    		query.setSuccessful(true);
+    		query.setResponseTime(((double) System.currentTimeMillis() - SMSServlet.queryTime)/1000);
+    		ProcessUser.persistWeather(query, output);
     	} else {
-    		ProcessUser.persistQuery(from, orig, "weather", false, type);
-    		Communicate.sendText("Weather not found for specified location.");
+    		query.setSuccessful(false);
+    		query.setResponseTime(((double) System.currentTimeMillis() - SMSServlet.queryTime)/1000);
+    		ProcessUser.persistWeather(query, output);
     	}
     }
     

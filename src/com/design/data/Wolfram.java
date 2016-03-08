@@ -8,6 +8,9 @@
 package com.design.data;
 
 import com.design.communicate.Communicate;
+import com.design.communicate.ProcessUser;
+import com.design.persistence.Queries;
+import com.design.servlets.SMSServlet;
 import com.wolfram.alpha.WAEngine;
 import com.wolfram.alpha.WAException;
 import com.wolfram.alpha.WAPlainText;
@@ -23,9 +26,10 @@ public class Wolfram
 	static int NO_PODS_TO_INCL = 3;
 //	static int alwaysInclIDs = {}; // POD IDs to always include, if they exist for a query
 
-	public static void wolframAlpha(String queryStr)
+	public static boolean wolframAlpha(Queries qu)
 	{
-    	StringBuilder result = new StringBuilder(".\n");
+    	String queryStr = qu.getQuery();
+		StringBuilder result = new StringBuilder(".\n");
     	
     	// Basic engine setup
     	WAEngine engine = new WAEngine();
@@ -46,18 +50,26 @@ public class Wolfram
 		{
 			// WIP: Handle WA engine errors
 			e.printStackTrace(); // Might not want this; need to generate a response
+			qu.setSuccessful(false);
+    		qu.setResponseTime(((double) System.currentTimeMillis() - SMSServlet.queryTime)/1000);
+    		ProcessUser.persistWolfram(qu);
+    		return false;
 		}
 		
 		// Error case
 		if (queryResult.isError())
 		{
-			System.out.println("Query error: " + queryResult.getErrorCode() + ": " + queryResult.getErrorMessage());
-			// WIP: Handles error from Wolfram querying
+			qu.setSuccessful(false);
+    		qu.setResponseTime(((double) System.currentTimeMillis() - SMSServlet.queryTime)/1000);
+    		ProcessUser.persistWolfram(qu);
+    		return false;
 		}
 		else if (!queryResult.isSuccess())
 		{
-			System.out.println("Query not successful");
-			// WIP: Handles failure of Wolfram to return result for query
+			qu.setSuccessful(false);
+    		qu.setResponseTime(((double) System.currentTimeMillis() - SMSServlet.queryTime)/1000);
+    		ProcessUser.persistWolfram(qu);
+    		return false;
 		}
 		// Response generation
 		else
@@ -121,7 +133,11 @@ public class Wolfram
 
 
     	 // Send results through Communicate Module
-    	 Communicate.sendText(result.toString());
+		qu.setSuccessful(false);
+		qu.setResponseTime(((double) System.currentTimeMillis() - SMSServlet.queryTime)/1000);
+		ProcessUser.persistWolfram(qu, result.toString());
+		
+		return true;
     	 
 	} // wolframAlpha method
 		

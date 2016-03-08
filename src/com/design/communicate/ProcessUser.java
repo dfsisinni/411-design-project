@@ -42,8 +42,20 @@ public class ProcessUser {
 		}
 	}
 	
-	public static void persistWeather (Weather weather, Queries query) {
+	public static void persistWeather (Queries query, String output) {
+		if (query.getSuccessful()) {
+			if (query.getType().equals("sms")) {
+				System.out.println("sending");
+				Communicate.sendText(output);
+				System.out.println("sent");
+			}
+		} else {
+			if (query.getType().equals("sms")) {
+				Communicate.sendText("Unable to process your weather query.");
+			}
+		}
 		
+		persistQuery(query);
 	}
 	
 	public static void persistDirection (String [] data, Queries query, int distance, int time) {
@@ -106,8 +118,17 @@ public class ProcessUser {
 		em.getTransaction().commit();
 	}
 	
-	public static void persistWolfram () {
+	public static void persistWolfram (Queries query) {
+		Communicate.sendText("Unable to process your query. Please try rephrasing.");
+		persistQuery(query);
+	}
+	
+	public static void persistWolfram (Queries query, String result) {
+		if (query.getType().equals("sms")) {
+			Communicate.sendText(result);
+		}
 		
+		persistQuery(query);
 	}
 	
 	public static int persistQuery (Queries query) {

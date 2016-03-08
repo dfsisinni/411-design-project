@@ -10,7 +10,7 @@ import javax.json.JsonReader;
 
 import com.design.communicate.Communicate;
 import com.design.communicate.ProcessUser;
-import com.design.persistence.Queries;
+import com.design.persistence.*;
 import com.design.servlets.SMSServlet;
 
 public class News {

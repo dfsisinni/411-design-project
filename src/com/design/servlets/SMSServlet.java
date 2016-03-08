@@ -23,6 +23,7 @@ import com.design.persistence.Users;
 import com.ibm.watson.developer_cloud.natural_language_classifier.v1.NaturalLanguageClassifier;
 import com.ibm.watson.developer_cloud.natural_language_classifier.v1.model.Classification;
 import com.ibm.watson.developer_cloud.natural_language_classifier.v1.model.ClassifiedClass;
+import com.twilio.sdk.verbs.TwiMLResponse;
 
 @WebServlet("/sms")
 public class SMSServlet extends HttpServlet {
@@ -40,6 +41,7 @@ public class SMSServlet extends HttpServlet {
     }
 
     public void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    	TwiMLResponse twiml = new TwiMLResponse();
     	if (request.getParameter("From") != null) {
     		//System.out.println(request.getParameter("From"));
             //System.out.println("Query: " + request.getParameter("Body"));
@@ -48,6 +50,9 @@ public class SMSServlet extends HttpServlet {
     		from = "+12896683263";
     		user = ProcessUser.userExists(from);
     		
+    		
+    		 response.setContentType(null);
+             response.getWriter().print(twiml.toXML());
     		
             processQuery(request.getParameter("Body"));
             
@@ -114,17 +119,19 @@ public class SMSServlet extends HttpServlet {
     			Maps.googleMaps(query);
     		} else if (classification.getTopClass().equals("math")) {
     			query.setClass1("math");
-    			//Wolfram.wolframAlpha(query);
+    			Wolfram.wolframAlpha(query);
     		} else if (classification.getTopClass().equals("weather")) {
     			query.setClass1("weather");
-    			//Weather.weather(query);
+    			Weather.weather(query);
     		} else if (classification.getTopClass().equals("news")) {
     			query.setClass1("news");
     			News.getNews(query);
     		}
     		else
     		{
-    			Wolfram.wolframAlpha(body);
+    			query.setClass1("math");
+    			Wolfram.wolframAlpha(query);
+    			
     		}
     	} else { // Otherwise unsuccessful
     		query.setClass1("");
