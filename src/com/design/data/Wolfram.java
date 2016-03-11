@@ -133,7 +133,7 @@ public class Wolfram
 
 
     	 // Send results through Communicate Module
-		qu.setSuccessful(false);
+		qu.setSuccessful(true);
 		qu.setResponseTime(((double) System.currentTimeMillis() - SMSServlet.queryTime)/1000);
 		ProcessUser.persistWolfram(qu, result.toString());
 		
